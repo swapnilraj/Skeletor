@@ -9,15 +9,15 @@ default: to_pdf
 to_latex:
 	mkdir -p $(build_dir)/latex
 	touch $(build_dir)/include.tex
-	#echo '\\documentclass[meta/main.tex]' > $(build_dir)/include.tex
-	echo '\\begin{document}' >> $(build_dir)/include.tex
+	# printf '\\documentclass[meta/main.tex]\n' > $(build_dir)/include.tex
+	printf '\\begin{document}\n' >> $(build_dir)/include.tex
 	$(foreach f, $(wildcard $(infiles)/*),\
 		pandoc \
 			--template=$(meta_dir)/section_template.tex\
 			$(f) -o $(build_dir)/latex/$(shell basename $(f)).tex;\
-		echo '\\subfile{$(build_dir)/latex/$(shell basename $(f))}' >> $(build_dir)/include.tex;\
+		printf '\\subfile{$(build_dir)/latex/$(shell basename $(f))}\n' >> $(build_dir)/include.tex;\
 	)
-	echo '\\end{document}' >> $(build_dir)/include.tex
+	printf '\\end{document}\n' >> $(build_dir)/include.tex
 
 to_pdf: to_latex
 	pandoc $(meta_dir)/main.tex $(pandoc_flags) -o $(outfile)
