@@ -2,6 +2,7 @@ outfile 	?= output.pdf
 build_dir 	:= .build
 meta_dir 	:= ./meta
 infiles 	:= ./sections
+pandoc_flags    := --number-sections -V fontsize=12pt
 
 default: to_pdf
 
@@ -14,12 +15,12 @@ to_latex:
 		pandoc \
 			--template=$(meta_dir)/section_template.tex\
 			$(f) -o $(build_dir)/latex/$(shell basename $(f)).tex;\
-		echo '\subfile{$(build_dir)/latex/$(shell basename $(f))}' >> $(build_dir)/include.tex;\
+		echo '\\subfile{$(build_dir)/latex/$(shell basename $(f))}' >> $(build_dir)/include.tex;\
 	)
 	echo '\\end{document}' >> $(build_dir)/include.tex
 
 to_pdf: to_latex
-	pandoc $(meta_dir)/main.tex -o $(outfile)
+	pandoc $(meta_dir)/main.tex $(pandoc_flags) -o $(outfile)
 
 clean:
 	-rm -r $(build_dir)
